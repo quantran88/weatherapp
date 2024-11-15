@@ -29,7 +29,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
     // Nếu không có, gọi API để lấy dữ liệu
     final String apiKey = 'ebf5554477f3420f92890327241411';
-    final String baseUrl = 'http://api.weatherapi.com/v1';
+    final String baseUrl = 'https://api.weatherapi.com/v1';
     final response = await http.get(Uri.parse('$baseUrl/forecast.json?key=$apiKey&q=$location&days=5'));
   
     if (response.statusCode == 200) {
@@ -183,15 +183,15 @@ Widget build(BuildContext context) {
                                       ),
                                     ),
                                     SizedBox(width: 10), 
-                                    Column(
-                                      children: [
-                                        Image.network(
-                                          'https:${weatherData['current']['condition']['icon']}',                              
-                                          fit: BoxFit.cover,
-                                        ),
-                                        Text( '${weatherData['current']['condition']['text']}',style: headlineStyle,)
-                                      ],
-                                    ),
+                                      Column(
+                                        children: [
+                                          Image.network(
+                                            'https:${weatherData['current']['condition']['icon']}',                              
+                                            fit: BoxFit.cover,
+                                          ),
+                                          Text( '${weatherData['current']['condition']['text']}',style: headlineStyle,)
+                                        ],
+                                      ),
                                   ],
                                 ),
                               ),
