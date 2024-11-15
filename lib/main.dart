@@ -1,10 +1,10 @@
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
-import 'package:weatherapp/screens/weatherscreen.dart';
+
+import 'package:weatherapp/screens/weather_screen.dart';
+
 
 
 
@@ -40,35 +40,7 @@ class MyApp extends StatelessWidget {
 }
 
 
-Future<void> sendEmail(String recipient, String subject, String body) async {
-  final Email email = Email(
-    body: body,
-    subject: subject,
-    recipients: [recipient],
-    isHTML: false,  
-  );
-
-  try {
-    await FlutterEmailSender.send(email);
-  } catch (error) {
-    print("Error sending email: $error");
-  }
-}
-
-Future<void> sendConfirmationEmail(String userEmail) async {
-  String subject = "Xác nhận đăng ký nhận dự báo thời tiết";
-  String body = "Chào bạn, Cảm ơn bạn đã đăng ký nhận thông tin dự báo thời tiết qua email. Bạn sẽ nhận được thông báo vào mỗi ngày.";
-
-  await sendEmail(userEmail, subject, body);
-}
 
 
-
-Future<void> saveEmailToFirestore(String email) async {
-  FirebaseFirestore.instance.collection('subscribers').add({
-    'email': email,
-    'timestamp': FieldValue.serverTimestamp(),
-  });
-}
 
 
