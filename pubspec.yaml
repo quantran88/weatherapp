@@ -19,6 +19,7 @@ dependencies:
   shared_preferences: ^2.0.15
   shared_preferences_web: ^2.0.0
   flutter_email_sender: ^5.0.2
+  geolocator: ^9.0.1
 
 dev_dependencies:
   flutter_test:

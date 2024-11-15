@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -39,6 +40,34 @@ class _WeatherScreenState extends State<WeatherScreen> {
     } else {
       throw Exception('Failed to load weather data');
     }
+  }
+
+  Future<String> _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Kiểm tra xem dịch vụ định vị có bật không
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return 'Location services are disabled.';
+    }
+
+    // Kiểm tra quyền truy cập vị trí
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return 'Location permissions are denied';
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return 'Location permissions are permanently denied';
+    }
+
+    // Lấy vị trí hiện tại
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    return '${position.latitude},${position.longitude}';  // Trả về vị trí dưới dạng "latitude,longitude"
   }
   
   @override
@@ -105,34 +134,57 @@ Widget build(BuildContext context) {
                       ),
                     ),
                   ),
-                    SizedBox(height: 12),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        width: 350,
-                        height: 35,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // Thêm hành động khi nhấn nút mới này
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => EmailSubscriptionWidget()),
-                            );
-                          },
-                          child: Text('Sign up to receive information'),
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: Colors.green[500],
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(3.0),
-                            ),
+                  SizedBox(height: 12),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      width: 350,
+                      height: 35,
+                      child: ElevatedButton (
+                        onPressed: () async {
+                          String location = await _getCurrentLocation();
+                          setState(() {
+                            _futureWeatherData = fetchWeather(location);
+                          });
+                        },
+                        child: Text('Use Current Location'),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.grey[500],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(3.0),
                           ),
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: 12),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      width: 350,
+                      height: 35,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => EmailSubscriptionWidget()),
+                          );
+                        },
+                        child: Text('Sign up to receive information'),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.green[500],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(3.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
+            ),
             SizedBox(width: 20), 
             Expanded(
               flex: 3,
