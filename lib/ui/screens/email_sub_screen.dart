@@ -4,7 +4,8 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 class EmailSubscriptionWidget extends StatefulWidget {
   @override
-  _EmailSubscriptionWidgetState createState() => _EmailSubscriptionWidgetState();
+  _EmailSubscriptionWidgetState createState() =>
+      _EmailSubscriptionWidgetState();
 }
 
 class _EmailSubscriptionWidgetState extends State<EmailSubscriptionWidget> {
@@ -13,33 +14,35 @@ class _EmailSubscriptionWidgetState extends State<EmailSubscriptionWidget> {
 
   void _subscribeEmail() {
     final email = _emailController.text.trim();
-      if (email.isEmpty) {
-        setState(() {
-          _errorMessage = 'Email không được để trống';
-        });
-        return;
-      }
-      final emailRegex = RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
-        if (!emailRegex.hasMatch(email)) {
-          setState(() {
-              _errorMessage = 'Email không hợp lệ';
-              });
-              return;
-            }
-            setState(() {
-              _errorMessage = null;
-            });
-            sendConfirmationEmail(email).then((_) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text('Đã gửi yêu cầu xác nhận tới email của bạn!'),
-              ));
-            }).catchError((e) {
-              // Nếu có lỗi khi gửi email
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text('Gửi email thất bại: $e'),
-              ));
-            });
-          }
+    if (email.isEmpty) {
+      setState(() {
+        _errorMessage = 'Email không được để trống';
+      });
+      return;
+    }
+    final emailRegex =
+        RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
+    if (!emailRegex.hasMatch(email)) {
+      setState(() {
+        _errorMessage = 'Email không hợp lệ';
+      });
+      return;
+    }
+    setState(() {
+      _errorMessage = null;
+    });
+    sendConfirmationEmail(email).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Đã gửi yêu cầu xác nhận tới email của bạn!'),
+      ));
+    }).catchError((e) {
+      // Nếu có lỗi khi gửi email
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Gửi email thất bại: $e'),
+      ));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,12 +72,13 @@ class _EmailSubscriptionWidgetState extends State<EmailSubscriptionWidget> {
     );
   }
 }
+
 Future<void> sendEmail(String recipient, String subject, String body) async {
   final Email email = Email(
     body: body,
     subject: subject,
     recipients: [recipient],
-    isHTML: false,  
+    isHTML: false,
   );
 
   try {
@@ -86,12 +90,11 @@ Future<void> sendEmail(String recipient, String subject, String body) async {
 
 Future<void> sendConfirmationEmail(String userEmail) async {
   String subject = "Xác nhận đăng ký nhận dự báo thời tiết";
-  String body = "Chào bạn, Cảm ơn bạn đã đăng ký nhận thông tin dự báo thời tiết qua email. Bạn sẽ nhận được thông báo vào mỗi ngày.";
+  String body =
+      "Chào bạn, Cảm ơn bạn đã đăng ký nhận thông tin dự báo thời tiết qua email. Bạn sẽ nhận được thông báo vào mỗi ngày.";
 
   await sendEmail(userEmail, subject, body);
 }
-
-
 
 Future<void> saveEmailToFirestore(String email) async {
   FirebaseFirestore.instance.collection('subscribers').add({

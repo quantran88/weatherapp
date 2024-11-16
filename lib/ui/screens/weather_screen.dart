@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:weatherapp/provider/weather_provider.dart';
-import 'package:weatherapp/screens/email_sub_screen.dart';
+import 'package:weatherapp/data/weather/day.dart';
+import 'package:weatherapp/data/weather/weather.dart';
+import 'package:weatherapp/ui/provider/weather_provider.dart';
+import 'package:weatherapp/ui/screens/email_sub_screen.dart';
 
 
 class WeatherScreen extends StatefulWidget {
@@ -11,62 +13,8 @@ class WeatherScreen extends StatefulWidget {
 const TextStyle headlineStyle = TextStyle(color: Colors.white);
 class _WeatherScreenState extends State<WeatherScreen> {
   final TextEditingController _controller = TextEditingController();
-  Future<Map<String, dynamic>>? _futureWeatherData;
-  /*Future<Map<String, dynamic>>? _futureWeatherData;
-  
-  Future<Map<String, dynamic>> fetchWeather(String location) async {
-    final prefs = await SharedPreferences.getInstance();
-    final String today = DateTime.now().toIso8601String().split('T')[0]; // lấy ngày hiện tại (YYYY-MM-DD)
+  Future<Weather>? _futureWeatherData; 
 
-    // Kiểm tra xem dữ liệu thời tiết đã có trong local storage chưa
-    final String? cachedWeather = prefs.getString('$location-$today');
-    if (cachedWeather != null) {
-      // Nếu có, trả về dữ liệu từ local storage
-      return json.decode(cachedWeather);
-    }
-
-    // Nếu không có, gọi API để lấy dữ liệu
-    final String apiKey = 'ebf5554477f3420f92890327241411';
-    final String baseUrl = 'https://api.weatherapi.com/v1';
-    final response = await http.get(Uri.parse('$baseUrl/forecast.json?key=$apiKey&q=$location&days=5'));
-  
-    if (response.statusCode == 200) {
-      // Lưu dữ liệu vào local storage
-      await prefs.setString('$location-$today', response.body);
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to load weather data');
-    }
-  }
-
-  Future<String> _getCurrentLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Kiểm tra xem dịch vụ định vị có bật không
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return 'Location services are disabled.';
-    }
-
-    // Kiểm tra quyền truy cập vị trí
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return 'Location permissions are denied';
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return 'Location permissions are permanently denied';
-    }
-
-    // Lấy vị trí hiện tại
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    return '${position.latitude},${position.longitude}';  // Trả về vị trí dưới dạng "latitude,longitude"
-  }*/
-  
   @override
 Widget build(BuildContext context) {
   return Scaffold(
@@ -189,7 +137,7 @@ Widget build(BuildContext context) {
               flex: 3,
               child: _futureWeatherData == null
                   ? Text('')
-                  : FutureBuilder<Map<String, dynamic>>(
+                  : FutureBuilder<Weather>(
                       future: _futureWeatherData,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -224,12 +172,12 @@ Widget build(BuildContext context) {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            '${weatherData['location']['name']} (${weatherData['forecast']['forecastday'][0]['date']})',
+                                            '${weatherData.location?.name} (${weatherData.forecast?.forecastday?[0].date})',
                                             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                                           ),
-                                          Text('Temperature: ${weatherData['current']['temp_c']} °C', style: headlineStyle),
-                                          Text('Wind Speed: ${weatherData['current']['wind_kph']} kph', style: headlineStyle),
-                                          Text('Humidity: ${weatherData['current']['humidity']} %', style: headlineStyle),
+                                          Text('Temperature: ${weatherData.current?.tempC} °C', style: headlineStyle),
+                                          Text('Wind Speed: ${weatherData.current?.windKph} kph', style: headlineStyle),
+                                          Text('Humidity: ${weatherData.current?.humidity} %', style: headlineStyle),
                                         ],
                                       ),
                                     ),
@@ -237,10 +185,10 @@ Widget build(BuildContext context) {
                                       Column(
                                         children: [
                                           Image.network(
-                                            'https:${weatherData['current']['condition']['icon']}',                              
+                                            'https:${weatherData.current?.condition?.icon}',                              
                                             fit: BoxFit.cover,
                                           ),
-                                          Text( '${weatherData['current']['condition']['text']}',style: headlineStyle,)
+                                          Text( '${weatherData.current?.condition?.text}',style: headlineStyle,)
                                         ],
                                       ),
                                   ],
@@ -254,7 +202,7 @@ Widget build(BuildContext context) {
                               SizedBox(height: 20),
                               Row(
                                 children: [
-                                  for (var day in weatherData['forecast']['forecastday'].take(4))
+                                  for (var day in weatherData.forecast?.forecastday?.take(4) ?? [])
                                     Expanded(
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -277,19 +225,19 @@ Widget build(BuildContext context) {
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                '(${day['date']})',
+                                              Text(  
+                                                '(${day.date ?? 'No Date'})',
                                                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold,color: Colors.white),
                                               ),
                                               Image.network(
-                                                'https:${day['day']['condition']['icon']}',
+                                                'https:${day.day?.condition?.icon}',
                                                 height: 40, 
                                                 width: 40,  
                                                 fit: BoxFit.cover,
                                               ),
-                                              Text('Max Temp: ${day['day']['maxtemp_c']} °C',style: headlineStyle,),
-                                              Text('Min Temp: ${day['day']['mintemp_c']} °C',style: headlineStyle,),
-                                              Text('Humidity: ${day['day']['avghumidity']} %',style: headlineStyle,),
+                                              Text('Max Temp: ${day.day?.maxtempC} °C',style: headlineStyle,),
+                                              Text('Min Temp: ${day.day?.mintempC} °C',style: headlineStyle,),
+                                              Text('Humidity: ${day.day?.avghumidity} %',style: headlineStyle,),
                                             ],
                                           ),
                                         ),

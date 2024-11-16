@@ -3,10 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:weatherapp/provider/email_sub_provider.dart';
-import 'package:weatherapp/provider/weather_provider.dart';
+import 'package:weatherapp/ui/provider/weather_provider.dart';
 
-import 'package:weatherapp/screens/weather_screen.dart';
+import 'package:weatherapp/ui/screens/weather_screen.dart';
 
 
 
@@ -28,7 +27,6 @@ void main() async {
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => WeatherProvider()),
-      ChangeNotifierProvider(create: (context) => EmailSubProvider())
       ],
      child: MyApp()
     ),
