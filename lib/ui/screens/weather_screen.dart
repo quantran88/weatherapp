@@ -21,7 +21,7 @@ Widget build(BuildContext context) {
     backgroundColor: Colors.blue[50],
     appBar: AppBar(
       title: const Text('Weather Dashboard', style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
-      backgroundColor: Colors.blue[500],
+      backgroundColor: Colors.blue[600],
       centerTitle: true,
     ),
     body: SingleChildScrollView(
@@ -72,7 +72,7 @@ Widget build(BuildContext context) {
                         child: Text('Search'),
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
-                          backgroundColor: Colors.blue[500],
+                          backgroundColor: Colors.blue[600],
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(3.0),
                           ),
@@ -97,7 +97,7 @@ Widget build(BuildContext context) {
                         child: Text('Use Current Location'),
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
-                          backgroundColor: Colors.grey[500],
+                          backgroundColor: Colors.grey[600],
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(3.0),
                           ),
@@ -141,6 +141,7 @@ Widget build(BuildContext context) {
                       future: _futureWeatherData,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
+                                    print(snapshot.data);
                           return CircularProgressIndicator();
                         } else if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
@@ -152,7 +153,7 @@ Widget build(BuildContext context) {
                                     Container(
                                       height: 150,
                                       decoration: BoxDecoration(
-                                      color: Colors.blue[500],
+                                      color: Colors.blue[600],
                                       borderRadius: BorderRadius.circular(10),
                                       boxShadow: [
                                         BoxShadow(
@@ -175,8 +176,11 @@ Widget build(BuildContext context) {
                                             '${weatherData.location?.name} (${weatherData.forecast?.forecastday?[0].date})',
                                             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                                           ),
+                                          SizedBox(height: 10),
                                           Text('Temperature: ${weatherData.current?.tempC} °C', style: headlineStyle),
+                                          SizedBox(height: 10),
                                           Text('Wind Speed: ${weatherData.current?.windKph} kph', style: headlineStyle),
+                                          SizedBox(height: 10),
                                           Text('Humidity: ${weatherData.current?.humidity} %', style: headlineStyle),
                                         ],
                                       ),
@@ -185,7 +189,9 @@ Widget build(BuildContext context) {
                                       Column(
                                         children: [
                                           Image.network(
-                                            'https:${weatherData.current?.condition?.icon}',                              
+                                            'https:${weatherData.current?.condition?.icon}', 
+                                            height: 80,
+                                            width: 80,                             
                                             fit: BoxFit.cover,
                                           ),
                                           Text( '${weatherData.current?.condition?.text}',style: headlineStyle,)
@@ -200,58 +206,62 @@ Widget build(BuildContext context) {
                                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                     ),
                               SizedBox(height: 20),
-                              Row(
-                                children: [
-                                  for (var day in weatherData.forecast?.forecastday?.take(4) ?? [])
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                        child: Container(
-                                          width: 100,
-                                          height: 230,
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[500],
-                                            borderRadius: BorderRadius.circular(10),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey.withOpacity(0.5),
-                                                spreadRadius: 2,
-                                                blurRadius: 5,
-                                                offset: Offset(0, 3),
-                                              ),
-                                            ],
+                              Container(
+                              height: 230, 
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal, 
+                                itemCount: weatherData.forecast?.forecastday?.take(4).length ?? 0, // Số lượng phần tử
+                                itemBuilder: (context, index) {
+                                  var forecastDay = weatherData.forecast?.forecastday?[index];
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Container(
+                                      width: 173,                                
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[600],
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 2,
+                                            blurRadius: 5,
+                                            offset: Offset(0, 3),
                                           ),
-                                          padding: EdgeInsets.all(16.0),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(  
-                                                '(${day.date ?? 'No Date'})',
-                                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold,color: Colors.white),
-                                              ),
-                                              Image.network(
-                                                'https:${day.day?.condition?.icon}',
-                                                height: 40, 
-                                                width: 40,  
-                                                fit: BoxFit.cover,
-                                              ),
-                                              Text('Max Temp: ${day.day?.maxtempC} °C',style: headlineStyle,),
-                                              Text('Min Temp: ${day.day?.mintempC} °C',style: headlineStyle,),
-                                              Text('Humidity: ${day.day?.avghumidity} %',style: headlineStyle,),
-                                            ],
-                                          ),
-                                        ),
+                                        ],
+                                      ),
+                                      padding: EdgeInsets.all(16.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text('(${forecastDay?.date ?? 'No Date'})',style: headlineStyle,),
+                                          SizedBox(height: 10),
+                                          if (forecastDay?.day?.condition?.icon != null)
+                                            Image.network(
+                                              'https:${forecastDay?.day?.condition?.icon}',
+                                              height: 40,
+                                              width: 40,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          SizedBox(height: 10),
+                                          Text('Max Temp: ${forecastDay?.day?.maxtempC ?? 'N/A'} °C',style: headlineStyle,),
+                                          SizedBox(height: 10),
+                                          Text('Min Temp: ${forecastDay?.day?.mintempC ?? 'N/A'} °C',style: headlineStyle,),
+                                          SizedBox(height: 10),
+                                          Text('Humidity: ${forecastDay?.day?.avghumidity ?? 'N/A'} %',style: headlineStyle,),
+                                        ],
                                       ),
                                     ),
-                                ],
+                                  );
+                                },
                               ),
-                            ],
-                          );
-                        } else {
-                          return Text('No data available');
-                        }
-                      },
-                    ),
+                            )
+                        ],
+                      );
+                    } else {
+                      return Text('No data available');
+                  }
+                },
+              ),
             ),
           ],
         ),

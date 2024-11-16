@@ -41,9 +41,11 @@ class Day {
   @JsonKey(name: 'daily_will_it_snow')
   int? dailyWillItSnow;
   @JsonKey(name: 'daily_chance_of_snow')
+  
   int? dailyChanceOfSnow;
   Condition? condition;
   double? uv;
+
 
   Day({
     this.maxtempC,

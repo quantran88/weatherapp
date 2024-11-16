@@ -5,8 +5,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:weatherapp/data/weather/weather.dart';
+import 'package:weatherapp/data/weather_repository.dart';
 
 class WeatherProvider extends ChangeNotifier {
+  
   Future<Weather> fetchWeather(String location) async {
   final prefs = await SharedPreferences.getInstance();
   final String today = DateTime.now()
@@ -21,10 +23,11 @@ class WeatherProvider extends ChangeNotifier {
   }
   
   // Nếu không có, gọi API để lấy dữ liệu
-  final String apiKey = 'ebf5554477f3420f92890327241411';
-  final String baseUrl = 'https://api.weatherapi.com/v1';
   final response = await http.get(
-      Uri.parse('$baseUrl/forecast.json?key=$apiKey&q=$location&days=5'));
+      Uri.parse(
+        '${WeatherRepository.baseUrl}/forecast.json?key=${WeatherRepository.apiKey}&q=$location&days=5',
+      ),
+    );
 
   if (response.statusCode == 200) {
     // Lưu dữ liệu vào local storage
