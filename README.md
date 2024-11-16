@@ -2,15 +2,28 @@
 
 A new Flutter project.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Screenshot](/images/z6037964477812_2da76afcbf82cd6332ce1b5161eeec9a.jpg)
+## Installation
++ Git clone https://github.com/quantran88/weatherapp
++ Chạy lệnh flutter clean 
++ Chạy lệnh flutter pub get để add toàn bộ thư viện vào
++ Chạy lệnh flutter run -d chrome để khởi chạy web
++
+## Feature
++Tìm kiếm thời tiết theo thành phố hoặc quốc gia.
++Xem dự báo thời tiết hàng ngày.
++Lưu trữ lịch sử tìm kiếm.
++Giao diện đáp ứng với thiết kế hiện đại.
+## Usage
++Mở ứng dụng trong trình duyệt.
++Nhập tên thành phố hoặc quốc gia vào thanh tìm kiếm.
++Bấm nút "Tìm kiếm" để xem thông tin thời tiết hiện tại và dự báo.
+## Project structure
+weatherapp/
+│
+├── lib/
+│   ├── main.dart          # Tệp chính khởi động ứng dụng
+│   ├── screens/           # Các màn hình UI chính
+│   └── services/          # Các dịch vụ gọi API
+│
+└── pubspec.yaml           # Tệp cấu hình dự án và các gói phụ thuộc

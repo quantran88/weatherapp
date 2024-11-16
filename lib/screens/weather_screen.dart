@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+import 'package:weatherapp/provider/weather_provider.dart';
 import 'package:weatherapp/screens/email_sub_screen.dart';
 
 
@@ -15,8 +12,8 @@ const TextStyle headlineStyle = TextStyle(color: Colors.white);
 class _WeatherScreenState extends State<WeatherScreen> {
   final TextEditingController _controller = TextEditingController();
   Future<Map<String, dynamic>>? _futureWeatherData;
+  /*Future<Map<String, dynamic>>? _futureWeatherData;
   
-
   Future<Map<String, dynamic>> fetchWeather(String location) async {
     final prefs = await SharedPreferences.getInstance();
     final String today = DateTime.now().toIso8601String().split('T')[0]; // lấy ngày hiện tại (YYYY-MM-DD)
@@ -68,7 +65,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
     // Lấy vị trí hiện tại
     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     return '${position.latitude},${position.longitude}';  // Trả về vị trí dưới dạng "latitude,longitude"
-  }
+  }*/
   
   @override
 Widget build(BuildContext context) {
@@ -119,8 +116,9 @@ Widget build(BuildContext context) {
                       height: 35,
                       child: ElevatedButton(
                         onPressed: () {
-                          setState(() {
-                            _futureWeatherData = fetchWeather(_controller.text);
+                            final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
+                            setState(() {
+                            _futureWeatherData = weatherProvider.fetchWeather(_controller.text);
                           });
                         },
                         child: Text('Search'),
@@ -142,10 +140,11 @@ Widget build(BuildContext context) {
                       height: 35,
                       child: ElevatedButton (
                         onPressed: () async {
-                          String location = await _getCurrentLocation();
-                          setState(() {
-                            _futureWeatherData = fetchWeather(location);
-                          });
+                          final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
+                            String location = await weatherProvider.getCurrentLocation(); // Gọi hàm từ Provider
+                            setState(() {
+                              _futureWeatherData = weatherProvider.fetchWeather(location);
+                            });
                         },
                         child: Text('Use Current Location'),
                         style: ElevatedButton.styleFrom(
