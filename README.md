@@ -9,7 +9,7 @@ A new Flutter project.
 - Chạy lệnh flutter pub get để add toàn bộ thư viện vào
 - Thay thế api trong class WeatherRepository cho giống với api của bạn trên https://www.weatherapi.com
 - Chạy lệnh flutter run -d chrome để khởi chạy web
-*Nếu muốn deploy hosting
+- Nếu muốn deploy hosting:
 - Chạy lệnh flutter buid web 
 - Chạy lệnh npm install -g firebase-tools
 - Chạy lệnh firebase experiments:enable webframeworks
