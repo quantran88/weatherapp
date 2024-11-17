@@ -4,16 +4,16 @@ A new Flutter project.
 
 ![Screenshot](/images/z6037964477812_2da76afcbf82cd6332ce1b5161eeec9a.jpg)
 ## Installation
-- Git clone https://github.com/quantran88/weatherapp
-- Chạy lệnh flutter clean 
-- Chạy lệnh flutter pub get để add toàn bộ thư viện vào
-- Thay thế api trong class WeatherRepository cho giống với api của bạn trên https://www.weatherapi.com
-- Chạy lệnh flutter run -d chrome để khởi chạy web
-- Nếu muốn deploy hosting:
-- Chạy lệnh flutter buid web 
-- Chạy lệnh npm install -g firebase-tools
-- Chạy lệnh firebase experiments:enable webframeworks
-- Chạy lệnh firebase init hosting:
+- Clone the repository: git clone https://github.com/quantran88/weatherapp
+- Run: flutter clean 
+- Install dependencies: flutter pub get 
+- Replace the API key in the WeatherRepository class with your own from https://www.weatherapi.com
+- To run the project: flutter run -d chrome 
+- Deploy hosting:
+- Run: flutter buid web 
+- Run: npm install -g firebase-tools
+- Run: firebase experiments:enable webframeworks
+- Run: firebase init hosting:
 + Answer yes when asked if you want to use a web framework.
 + If you're in an empty directory, you'll be asked to choose your web framework. Choose Flutter Web.
 + Choose your hosting source directory; this could be an existing flutter app.
@@ -22,21 +22,21 @@ A new Flutter project.
 - Deploy the app to Firebase Hosting:
 + Chạy lệnh firebase deploy --only hosting
 ## Feature
-+Tìm kiếm thời tiết theo thành phố hoặc quốc gia.
-+Xem dự báo thời tiết hàng ngày.
-+Lưu trữ lịch sử tìm kiếm.
-+Giao diện đáp ứng với thiết kế hiện đại.
++ Search for weather information by city or country.
++ View daily weather forecasts.
++ Save search history.
++ Responsive UI with a modern design.
 ## Usage
-+Mở ứng dụng trong trình duyệt.
-+Nhập tên thành phố hoặc quốc gia vào thanh tìm kiếm.
-+Bấm nút "Tìm kiếm" để xem thông tin thời tiết hiện tại và dự báo.
++ Open the app in a web browser.
++ Enter the name of a city or country in the search bar.
++ Click the "Search" button to view current weather and forecasts.
 ## Project structure
 weatherapp/
 │
 ├── lib/
-│   ├── main.dart                        # Tệp chính khởi động ứng dụng
-│   ├──ui/screens/                       # Các màn hình UI chính   
-│   ├──ui/provider/                      # Quản lý việc lấy dữ liệu thời tiết và vị trí người dùng
-│   └──data/weather_repository/          # Các dịch vụ gọi API
+│   ├── main.dart                        # Main entry point of the application
+│   ├──ui/screens/                       # Main UI screens   
+│   ├──ui/provider/                      # Manages weather data retrieval and user location
+│   └──data/weather_repository/          # API service handling
 │
-└── pubspec.yaml                         # Tệp cấu hình dự án và các gói phụ thuộc
+└── pubspec.yaml                         # Project configuration and dependencies
