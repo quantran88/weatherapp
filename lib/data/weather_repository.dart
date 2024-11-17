@@ -3,8 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:weatherapp/data/weather/weather.dart';
 
 class WeatherRepository {
-  static const String apiKey = 'ebf5554477f3420f92890327241411';
-  static const String baseUrl = 'http://api.weatherapi.com/v1';
+  final String apiKey = 'ebf5554477f3420f92890327241411';
+  final String baseUrl = 'http://api.weatherapi.com/v1';
 
   Future<Weather> fetchWeather(String location) async {
     final response = await http.get(

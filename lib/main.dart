@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:weatherapp/data/weather_repository.dart';
 import 'package:weatherapp/ui/provider/weather_provider.dart';
 
 import 'package:weatherapp/ui/screens/weather_screen.dart';
@@ -26,7 +27,7 @@ void main() async {
   }
   runApp(
     MultiProvider(providers: [
-      ChangeNotifierProvider(create: (context) => WeatherProvider()),
+      ChangeNotifierProvider(create: (context) => WeatherProvider(WeatherRepository())),
       ],
      child: MyApp()
     ),
